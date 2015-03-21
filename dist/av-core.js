@@ -4702,20 +4702,11 @@
 
                       var promise = new AV.Promise();
                       var handled = false;
-                      var progressHdlCnt = 0;
 
                       var xhr = new AV.XMLHttpRequest();
 
                       xhr.upload.addEventListener('progress', function(e) {
-                          if (e.lengthComputable) {
-                              // throttling
-                              if (++progressHdlCnt < 10) {
-                                  return;
-                              }
-                              progressHdlCnt = 0;
-                              var percentComplete = e.loaded / e.total;
-                              self._onUploadProgress && self._onUploadProgress(e);
-                          }
+                          e.lengthComputable && self._onUploadProgress && self._onUploadProgress(e);
                       }, false);
 
                       xhr.onreadystatechange = function() {
