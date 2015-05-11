@@ -4,8 +4,15 @@ Javascript SDK for [LeanCloud](http://leancloud.cn).
 
 # 安装
 
+### npm
+
 ```sh
 $ npm install avoscloud-sdk
+```
+### bower
+
+```sh
+$ bower install leancloud-javascript-sdk
 ```
 
 ## Changelog
@@ -36,3 +43,14 @@ gulp release
 # 协议
 
 [MIT License](http://opensource.org/licenses/MIT)
+
+# 内部发布
+## 修改版本号
+* lib/version.js
+* package.json
+* bower.json
+
+## 发布到 bower 
+```
+bower register leancloud-javascript-sdk git@github.com:leancloud/javascript-sdk.git
+```

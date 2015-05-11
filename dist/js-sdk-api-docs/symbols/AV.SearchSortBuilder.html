@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - AV.Cloud.BeforeDeleteRequest</title>
+		<title>JsDoc Reference - AV.SearchSortBuilder</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -282,7 +282,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class AV.Cloud.BeforeDeleteRequest
+				Class AV.SearchSortBuilder
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -290,17 +290,16 @@ ul.inheritsList
 				
 				
 			
-				A Request object that is passed into the beforeDelete function.
-<strong>Available in Cloud Code only.</strong>
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/lib_cloud.js.html">cloud.js</a>.
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/dist_av.js.html">av.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.Cloud.BeforeDeleteRequest.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.SearchSortBuilder.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -313,9 +312,15 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/AV.Cloud.BeforeDeleteRequest.html#constructor">AV.Cloud.BeforeDeleteRequest</a></b>()
+								<b><a href="../symbols/AV.SearchSortBuilder.html#constructor">AV.SearchSortBuilder</a></b>()
 							</div>
-							<div class="description"></div>
+							<div class="description">A builder to generate sort string for app searching.For example:
+<pre><code>
+  var builder = new AV.SearchSortBuilder();
+  builder.ascending('key1').descending('key2','max');
+  var query = new AV.SearchQuery('Player');
+  query.sortBy(builder);
+  query.find().then .</div>
 						</td>
 					</tr>
 				</tbody>
@@ -324,14 +329,17 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+
+<!-- ============================== methods summary ======================== -->
+			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class AV.Cloud.BeforeDeleteRequest.">
-					<caption>Field Summary</caption>
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class AV.SearchSortBuilder.">
+					<caption>Method Summary</caption>
 					<thead>
 						<tr>
-							<th scope="col">Field Attributes</th>
-							<th scope="col">Field Name and Description</th>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -339,20 +347,37 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/AV.Cloud.BeforeDeleteRequest.html#object">object</a></b>
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchSortBuilder.html#ascending">ascending</a></b>(key, mode, missing)
 								</div>
-								<div class="description">The object that is being deleted.</div>
+								<div class="description">Sorts the results in ascending order by the given key and options.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/AV.Cloud.BeforeDeleteRequest.html#user">user</a></b>
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchSortBuilder.html#build">build</a></b>()
 								</div>
-								<div class="description">If set, the user that made the request.</div>
+								<div class="description">Build a sort string by configuration.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchSortBuilder.html#descending">descending</a></b>(key, mode, missing)
+								</div>
+								<div class="description">Sorts the results in descending order by the given key and options.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchSortBuilder.html#whereNear">whereNear</a></b>(key, point, options)
+								</div>
+								<div class="description">Add a proximity based constraint for finding objects with key point
+values near the point given.</div>
 							</td>
 						</tr>
 					
@@ -361,9 +386,6 @@ ul.inheritsList
 				
 				
 				
-			
-
-<!-- ============================== methods summary ======================== -->
 			
 <!-- ============================== events summary ======================== -->
 			
@@ -376,11 +398,18 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>AV.Cloud.BeforeDeleteRequest</b>()
+						<b>AV.SearchSortBuilder</b>()
 				</div>
 				
 				<div class="description">
-					
+					A builder to generate sort string for app searching.For example:
+<pre><code>
+  var builder = new AV.SearchSortBuilder();
+  builder.ascending('key1').descending('key2','max');
+  var query = new AV.SearchQuery('Player');
+  query.sortBy(builder);
+  query.find().then ...
+</code></pre>
 					
 				</div>
 				
@@ -389,6 +418,11 @@ ul.inheritsList
 				
 					
 					
+					
+						<dl class="detailList">
+						<dt class="heading">Since:</dt>
+							<dd>0.5.1</dd>
+						</dl>
 					
 					
 					
@@ -400,57 +434,215 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+
+<!-- ============================== method details ========================= -->		
+			
 				<div class="sectionTitle">
-					Field Detail
+					Method Detail
 				</div>
 				
-					<a name="object"> </a>
+					<a name="ascending"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.Object.html">AV.Object</a>}</span>
-					<b>object</b>
+					<span class="light">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span>
+					<b>ascending</b>(key, mode, missing)
 					
 					</div>
 					<div class="description">
-						The object that is being deleted.
+						Sorts the results in ascending order by the given key and options.
 						
 						
 					</div>
 					
 					
-
+					
 						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>key</b>
+									
+								</dt>
+								<dd>The key to order by.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>mode</b>
+									
+								</dt>
+								<dd>The sort mode, default is 'avg', you can choose
+                 'max' or 'min' too.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>missing</b>
+									
+								</dt>
+								<dd>The missing key behaviour, default is 'last',
+                 you can choose 'first' too.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span> Returns the builder, so you can chain this call.</dd>
+							
+							</dl>
 						
 						
 						
 
 					<hr />
 				
-					<a name="user"> </a>
+					<a name="build"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.User.html">AV.User</a>}</span>
-					<b>user</b>
+					<span class="light">{String}</span>
+					<b>build</b>()
 					
 					</div>
 					<div class="description">
-						If set, the user that made the request.
+						Build a sort string by configuration.
 						
 						
 					</div>
 					
 					
-
+					
 						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> the sort string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="descending"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span>
+					<b>descending</b>(key, mode, missing)
+					
+					</div>
+					<div class="description">
+						Sorts the results in descending order by the given key and options.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>key</b>
+									
+								</dt>
+								<dd>The key to order by.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>mode</b>
+									
+								</dt>
+								<dd>The sort mode, default is 'avg', you can choose
+                 'max' or 'min' too.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>missing</b>
+									
+								</dt>
+								<dd>The missing key behaviour, default is 'last',
+                 you can choose 'first' too.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span> Returns the builder, so you can chain this call.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="whereNear"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span>
+					<b>whereNear</b>(key, point, options)
+					
+					</div>
+					<div class="description">
+						Add a proximity based constraint for finding objects with key point
+values near the point given.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>key</b>
+									
+								</dt>
+								<dd>The key that the AV.GeoPoint is stored in.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/AV.GeoPoint.html">AV.GeoPoint</a>}</span> <b>point</b>
+									
+								</dt>
+								<dd>The reference AV.GeoPoint that is used.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									
+								</dt>
+								<dd>The other options such as mode,order, unit etc.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span> Returns the builder, so you can chain this call.</dd>
+							
+							</dl>
 						
 						
 						
 
 					
 				
-			
-
-<!-- ============================== method details ========================= -->		
 			
 			
 <!-- ============================== event details ========================= -->		
@@ -463,7 +655,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Apr 24 2015 18:57:57 GMT+0800 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Apr 24 2015 18:57:58 GMT+0800 (CST)
 		</div>
 	</body>
 </html>

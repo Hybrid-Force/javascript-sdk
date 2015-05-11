@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - AV.InboxQuery</title>
+		<title>JsDoc Reference - AV.SearchQuery</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -282,7 +282,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class AV.InboxQuery
+				Class AV.SearchQuery
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -299,7 +299,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.InboxQuery.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.SearchQuery.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -312,9 +312,20 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/AV.InboxQuery.html#constructor">AV.InboxQuery</a></b>()
+								<b><a href="../symbols/AV.SearchQuery.html#constructor">AV.SearchQuery</a></b>()
 							</div>
-							<div class="description"><p>AV.InboxQuery defines a query that is used to fetch somebody's inbox statuses.</div>
+							<div class="description">App searching query.Use just like AV.Query:
+<pre><code>
+  var query = new AV.SearchQuery('Player');
+  query.queryString('*');
+  query.find().then(function(results) {
+    console.log('Found %d objects', query.hits());
+    //Process results
+  });
+
+</code></pre>
+Visite <a href='https://leancloud.cn/docs/app_search_guide.html'>App Searching Guide</a>
+for more details.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -328,7 +339,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class AV.InboxQuery.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class AV.SearchQuery.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -341,37 +352,54 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.InboxQuery.html#inboxType">inboxType</a></b>(owner)
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#find">find</a></b>(options)
 								</div>
-								<div class="description">Sets the querying inbox type.default is 'default'.</div>
+								<div class="description">Retrieves a list of AVObjects that satisfy this query.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.InboxQuery.html#maxId">maxId</a></b>(n)
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#highlights">highlights</a></b>(highlights)
 								</div>
-								<div class="description">Sets the maximal messageId of results。
-This is useful for pagination.</div>
+								<div class="description">Sets the highlight fields.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.InboxQuery.html#owner">owner</a></b>(owner)
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#hits">hits</a></b>()
 								</div>
-								<div class="description">Sets the owner of the querying inbox.</div>
+								<div class="description">Returns the number of objects that match this query.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.InboxQuery.html#sinceId">sinceId</a></b>(n)
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#queryString">queryString</a></b>(q)
 								</div>
-								<div class="description">Sets the messageId of results to skip before returning any results.</div>
+								<div class="description">Sets the query string of app searching.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#sid">sid</a></b>(sid)
+								</div>
+								<div class="description">Sets the sid of app searching query.Default is null.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.SearchQuery.html#sortBy">sortBy</a></b>(builder)
+								</div>
+								<div class="description">Sets the sort builder for this query.</div>
 							</td>
 						</tr>
 					
@@ -392,30 +420,39 @@ This is useful for pagination.</div>
 				</div>
 				
 				<div class="fixedFont">
-						<b>AV.InboxQuery</b>()
+						<b>AV.SearchQuery</b>()
 				</div>
 				
 				<div class="description">
-					<p>AV.InboxQuery defines a query that is used to fetch somebody's inbox statuses.</p>
+					App searching query.Use just like AV.Query:
+<pre><code>
+  var query = new AV.SearchQuery('Player');
+  query.queryString('*');
+  query.find().then(function(results) {
+    console.log('Found %d objects', query.hits());
+    //Process results
+  });
+
+</code></pre>
+Visite <a href='https://leancloud.cn/docs/app_search_guide.html'>App Searching Guide</a>
+for more details.
 					
 				</div>
 				
 				
 				
 				
-					
-					
-					
-					
 					
 					
 					
 						<dl class="detailList">
-						<dt class="heading">See:</dt>
-						
-							<dd>AV.Status#inboxQuery</dd>
-						
+						<dt class="heading">Since:</dt>
+							<dd>0.5.1</dd>
 						</dl>
+					
+					
+					
+					
 					
 
 			</div>
@@ -430,15 +467,17 @@ This is useful for pagination.</div>
 					Method Detail
 				</div>
 				
-					<a name="inboxType"> </a>
+					<a name="find"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span>
-					<b>inboxType</b>(owner)
+					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<b>find</b>(options)
 					
 					</div>
 					<div class="description">
-						Sets the querying inbox type.default is 'default'.
+						Retrieves a list of AVObjects that satisfy this query.
+Either options.success or options.error is called when the find
+completes.
 						
 						
 					</div>
@@ -450,10 +489,10 @@ This is useful for pagination.</div>
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>owner</b>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
 									
 								</dt>
-								<dd>The inbox type.</dd>
+								<dd>A Backbone-style options object.</dd>
 							
 							</dl>
 						
@@ -464,7 +503,63 @@ This is useful for pagination.</div>
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span> Returns the query, so you can chain this call.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is resolved with the results when
+the query completes.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.Query.html#find">AV.Query#find</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="highlights"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span>
+					<b>highlights</b>(highlights)
+					
+					</div>
+					<div class="description">
+						Sets the highlight fields. Such as
+<pre><code>
+  query.highlights('title');
+  //or pass an array.
+  query.highlights(['title', 'content'])
+</code></pre>
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Array}</span> <b>highlights</b>
+									
+								</dt>
+								<dd>a list of fields.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span> Returns the query, so you can chain this call.</dd>
 							
 							</dl>
 						
@@ -473,34 +568,21 @@ This is useful for pagination.</div>
 
 					<hr />
 				
-					<a name="maxId"> </a>
+					<a name="hits"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span>
-					<b>maxId</b>(n)
+					<span class="light">{Number}</span>
+					<b>hits</b>()
 					
 					</div>
 					<div class="description">
-						Sets the maximal messageId of results。
-This is useful for pagination.
-Default is zero that is no limition.
+						Returns the number of objects that match this query.
 						
 						
 					</div>
 					
 					
 					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>n</b>
-									
-								</dt>
-								<dd>the mesage id.</dd>
-							
-							</dl>
 						
 						
 						
@@ -509,7 +591,7 @@ Default is zero that is no limition.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span> Returns the query, so you can chain this call.</dd>
+								<dd><span class="light fixedFont">{Number}</span> </dd>
 							
 							</dl>
 						
@@ -518,15 +600,15 @@ Default is zero that is no limition.
 
 					<hr />
 				
-					<a name="owner"> </a>
+					<a name="queryString"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span>
-					<b>owner</b>(owner)
+					<span class="light">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span>
+					<b>queryString</b>(q)
 					
 					</div>
 					<div class="description">
-						Sets the owner of the querying inbox.
+						Sets the query string of app searching.
 						
 						
 					</div>
@@ -538,10 +620,10 @@ Default is zero that is no limition.
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>owner</b>
+									<span class="light fixedFont">{String}</span> <b>q</b>
 									
 								</dt>
-								<dd>The inbox owner.</dd>
+								<dd>The query string.</dd>
 							
 							</dl>
 						
@@ -552,7 +634,7 @@ Default is zero that is no limition.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span> Returns the query, so you can chain this call.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span> Returns the query, so you can chain this call.</dd>
 							
 							</dl>
 						
@@ -561,17 +643,15 @@ Default is zero that is no limition.
 
 					<hr />
 				
-					<a name="sinceId"> </a>
+					<a name="sid"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span>
-					<b>sinceId</b>(n)
+					<span class="light">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span>
+					<b>sid</b>(sid)
 					
 					</div>
 					<div class="description">
-						Sets the messageId of results to skip before returning any results.
-This is useful for pagination.
-Default is zero.
+						Sets the sid of app searching query.Default is null.
 						
 						
 					</div>
@@ -583,10 +663,10 @@ Default is zero.
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>n</b>
+									<span class="light fixedFont">{String}</span> <b>sid</b>
 									
 								</dt>
-								<dd>the mesage id.</dd>
+								<dd>Scroll id for searching.</dd>
 							
 							</dl>
 						
@@ -597,11 +677,61 @@ Default is zero.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.InboxQuery.html">AV.InboxQuery</a>}</span> Returns the query, so you can chain this call.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span> Returns the query, so you can chain this call.</dd>
 							
 							</dl>
 						
 						
+						
+
+					<hr />
+				
+					<a name="sortBy"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span>
+					<b>sortBy</b>(builder)
+					
+					</div>
+					<div class="description">
+						Sets the sort builder for this query.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a>}</span> <b>builder</b>
+									
+								</dt>
+								<dd>The sort builder.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a>}</span> Returns the query, so you can chain this call.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a></dd>
+							
+							</dl>
 						
 
 					

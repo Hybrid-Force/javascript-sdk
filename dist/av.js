@@ -1,6 +1,6 @@
 (function(root) {
   root.AV = root.AV || {};
-  root.AV.VERSION = "js0.5.0";
+  root.AV.VERSION = "js0.5.1";
 }(this));
 
 //     Underscore.js 1.4.4
@@ -1244,25 +1244,31 @@
    */
   var AV = root.AV;
 
+  // Import XMLHttpRequest
+  if (typeof(XMLHttpRequest) !== 'undefined') {
+    AV.XMLHttpRequest = XMLHttpRequest;
+  } else if (typeof(require) === 'function' && typeof(require.ensure) === 'undefined') {
+    AV.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+  }
+
+  // Import localStorage
+  if (typeof(localStorage) !== 'undefined') {
+    AV.localStorage= localStorage;
+  } else if (typeof(require) === 'function' && typeof(require.ensure) === 'undefined') {
+    try{
+      AV.localStorage = require('localStorage');
+    }catch(error){
+      AV.localStorage = require('./localStorage.js').localStorage;
+    }
+  }
+
   // Import AV's local copy of underscore.
   if (typeof(exports) !== "undefined" && exports._) {
     // We're running in Node.js.  Pull in the dependencies.
     AV._ = exports._.noConflict();
-    try{
-        AV.localStorage = require('localStorage');
-	}catch(error){
-		AV.localStorage = require('./localStorage.js').localStorage;
-	}
-    AV.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
     exports.AV = AV;
   } else {
     AV._ = _.noConflict();
-    if (typeof(localStorage) !== "undefined") {
-      AV.localStorage = localStorage;
-    }
-    if (typeof(XMLHttpRequest) !== "undefined") {
-      AV.XMLHttpRequest = XMLHttpRequest;
-    }
   }
 
   // If jQuery or Zepto has been included, grab a reference to it.
@@ -1617,6 +1623,7 @@
         route !== "cloudQuery" &&
         route !== "qiniu" &&
         route !== "statuses" &&
+        route !== 'search/select' &&
         route !== 'subscribe/statuses/count' &&
         route !== 'subscribe/statuses' &&
         !(/users\/[^\/]+\/updatePassword/.test(route)) &&
@@ -4742,23 +4749,6 @@
 
                       return promise;
                   });
-              } else if(self._url && self._metaData['__source'] == 'external') {
-                  //external link file.
-                  var data = {
-                      name: self._name,
-                      ACL: self._acl,
-                      metaData: self._metaData,
-                      mime_type: self._guessedType,
-                      url: self._url
-                  };
-                  self._previousSave = AV._request("files", self._name, null, 'POST', data).then(function(response) {
-                      self._name = response.name;
-                      self._url = response.url;
-                      self.id = response.objectId;
-                      if(response.size)
-                          self._metaData.size = response.size;
-                      return self;
-                  });
               }
           }
           return self._previousSave._thenRunCallbacks(options);
@@ -5538,12 +5528,26 @@
      * Fetch the model from the server. If the server's representation of the
      * model differs from its current attributes, they will be overriden,
      * triggering a <code>"change"</code> event.
+     * @param {Object} fetchOptions Optional options to set 'keys' and
+     *      'include' option.
+     * @param {Object} options Optional Backbone-like options object to be
+     *     passed in to set.
      * @return {AV.Promise} A promise that is fulfilled when the fetch
      *     completes.
      */
-    fetch: function(options) {
+    fetch: function() {
+      var options = null;
+      var fetchOptions = {};
+      if(arguments.length === 1) {
+        options = arguments[0];
+      } else if(arguments.length === 2) {
+        fetchOptions = arguments[0];
+        options = arguments[1];
+      }
+
       var self = this;
-      var request = AV._request("classes", this.className, this.id, 'GET');
+      var request = AV._request("classes", this.className, this.id, 'GET',
+                                fetchOptions);
       return request.then(function(response, status, xhr) {
         self._finishFetch(self.parse(response, status, xhr), true);
         return self;
@@ -7051,6 +7055,40 @@
     },
 
     /**
+     * Logs in a user with a session token. On success, this saves the session
+     * to disk, so you can retrieve the currently logged in user using
+     * <code>current</code>.
+     *
+     * <p>Calls options.success or options.error on completion.</p>
+     *
+     * @param {String} sessionToken The sessionToken to log in with.
+     * @param {Object} options A Backbone-style options object.
+     * @return {AV.Promise} A promise that is fulfilled with the user when
+     *     the login completes.
+     */
+    become: function(sessionToken, options) {
+      options = options || {};
+
+      var user = AV.Object._create("_User");
+      return AV._request(
+          "users",
+          "me",
+          null,
+          "GET",
+          {
+            useMasterKey: options.useMasterKey,
+            session_token: sessionToken
+          }
+      ).then(function(resp, status, xhr) {
+          var serverAttrs = user.parse(resp, status, xhr);
+          user._finishFetch(serverAttrs);
+          user._handleSaveResult(true);
+          return user;
+
+      })._thenRunCallbacks(options, user);
+    },
+
+    /**
      * Logs in a user with a mobile phone number and sms code sent by
      * AV.User.requestLoginSmsCode.On success, this
      * saves the session to disk, so you can retrieve the currently logged in
@@ -7759,6 +7797,17 @@
     },
 
     /**
+     * Add a constraint to the query that requires a particular
+     * <strong>array</strong> key's length to be equal to the provided value.
+     * @param {String} key The array key to check.
+     * @param value The length value.
+     * @return {AV.Query} Returns the query, so you can chain this call.
+     */
+    sizeEqualTo: function(key, value) {
+      this._addCondition(key, "$size", value);
+    },
+
+    /**
      * Add a constraint to the query that requires a particular key's value to
      * be not equal to the provided value.
      * @param {String} key The key to check.
@@ -8088,7 +8137,7 @@
      if(this._order)
        this._order += ',-' + key;
      else
-       this._order = key;
+       this._order = '-' + key;
      return key;
    },
 
@@ -8804,6 +8853,268 @@
   };
 
 }(this));
+
+(function(root) {
+  root.AV = root.AV || {};
+  var AV = root.AV;
+  var _ = AV._;
+
+  /**
+   * A builder to generate sort string for app searching.For example:
+   * <pre><code>
+   *   var builder = new AV.SearchSortBuilder();
+   *   builder.ascending('key1').descending('key2','max');
+   *   var query = new AV.SearchQuery('Player');
+   *   query.sortBy(builder);
+   *   query.find().then ...
+   * </code></pre>
+   * @class
+   * @since 0.5.1
+   */
+  AV.SearchSortBuilder = function() {
+    this._sortFields = [];
+  };
+
+  AV.SearchSortBuilder.prototype = {
+    _addField: function(key, order, mode, missing) {
+      var field = {};
+      field[key] = {
+        order: order || 'asc',
+        mode: mode ||'avg',
+        missing: '_' + (missing || 'last')
+      };
+      this._sortFields.push(field);
+      return this;
+    },
+
+
+    /**
+     * Sorts the results in ascending order by the given key and options.
+     *
+     * @param {String} key The key to order by.
+     * @param {String} mode The sort mode, default is 'avg', you can choose
+     *                  'max' or 'min' too.
+     * @param {String} missing The missing key behaviour, default is 'last',
+     *                  you can choose 'first' too.
+     * @return {AV.SearchSortBuilder} Returns the builder, so you can chain this call.
+     */
+    ascending: function(key, mode, missing) {
+      return this._addField(key, 'asc', mode, missing);
+    },
+
+    /**
+     * Sorts the results in descending order by the given key and options.
+     *
+     * @param {String} key The key to order by.
+     * @param {String} mode The sort mode, default is 'avg', you can choose
+     *                  'max' or 'min' too.
+     * @param {String} missing The missing key behaviour, default is 'last',
+     *                  you can choose 'first' too.
+     * @return {AV.SearchSortBuilder} Returns the builder, so you can chain this call.
+     */
+    descending: function(key, mode, missing) {
+      return this._addField(key, 'desc', mode, missing);
+    },
+
+    /**
+     * Add a proximity based constraint for finding objects with key point
+     * values near the point given.
+     * @param {String} key The key that the AV.GeoPoint is stored in.
+     * @param {AV.GeoPoint} point The reference AV.GeoPoint that is used.
+     * @param {Object} options The other options such as mode,order, unit etc.
+     * @return {AV.SearchSortBuilder} Returns the builder, so you can chain this call.
+     */
+    whereNear: function(key, point, options) {
+      options = options || {};
+      var field = {};
+      var geo = {
+        lat: point.latitude,
+        lon: point.longitude
+      };
+      var m = {
+        order: options.order || 'asc',
+        mode: options.mode || 'avg',
+        unit: options.unit || 'km'
+      };
+      m[key] = geo;
+      field['_geo_distance'] = m;
+
+      this._sortFields.push(field);
+      return this;
+    },
+
+    /**
+     * Build a sort string by configuration.
+     * @return {String} the sort string.
+     */
+    build: function() {
+      return JSON.stringify(AV._encode(this._sortFields));
+    }
+  };
+
+  /**
+   * App searching query.Use just like AV.Query:
+   * <pre><code>
+   *   var query = new AV.SearchQuery('Player');
+   *   query.queryString('*');
+   *   query.find().then(function(results) {
+   *     console.log('Found %d objects', query.hits());
+   *     //Process results
+   *   });
+   *
+   * </code></pre>
+   * Visite <a href='https://leancloud.cn/docs/app_search_guide.html'>App Searching Guide</a>
+   * for more details.
+   * @class
+   * @since 0.5.1
+   *
+   */
+  AV.SearchQuery = AV.Query._extend(/** @lends AV.SearchQuery.prototype */{
+     _sid: null,
+     _hits:  0,
+     _queryString: null,
+     _highlights: null,
+     _sortBuilder: null,
+    _createRequest: function(params){
+      return AV._request("search/select", null, null, "GET",
+                                   params || this.toJSON());
+    },
+
+    /**
+     * Sets the sid of app searching query.Default is null.
+     * @param {String} sid  Scroll id for searching.
+     * @return {AV.SearchQuery} Returns the query, so you can chain this call.
+     */
+    sid: function(sid) {
+      this._sid = sid;
+      return this;
+    },
+
+    /**
+     * Sets the query string of app searching.
+     * @param {String} q  The query string.
+     * @return {AV.SearchQuery} Returns the query, so you can chain this call.
+     */
+    queryString: function(q) {
+      this._queryString = q;
+      return this;
+    },
+
+
+    /**
+     * Sets the highlight fields. Such as
+     * <pre><code>
+     *   query.highlights('title');
+     *   //or pass an array.
+     *   query.highlights(['title', 'content'])
+     * </code></pre>
+     * @param {Array} highlights a list of fields.
+     * @return {AV.SearchQuery} Returns the query, so you can chain this call.
+     */
+    highlights: function(highlights) {
+      var objects;
+      if (highlights && _.isString(highlights)) {
+        objects = arguments;
+      } else {
+        objects = highlights;
+      }
+      this._highlights = objects;
+      return this;
+    },
+
+    /**
+     * Sets the sort builder for this query.
+     * @see AV.SearchSortBuilder
+     * @param { AV.SearchSortBuilder} builder The sort builder.
+     * @return {AV.SearchQuery} Returns the query, so you can chain this call.
+     *
+     */
+    sortBy: function(builder) {
+      this._sortBuilder = builder;
+      return this;
+    },
+
+    /**
+     * Returns the number of objects that match this query.
+     * @return {Number}
+     */
+    hits: function() {
+       if (!this._hits) {
+        this._hits = 0;
+      }
+      return this._hits;
+    },
+
+    _processResult: function(json){
+       delete json['className'];
+       delete json['_app_url'];
+       delete json['_deeplink'];
+       return json;
+    },
+
+    /**
+     * Retrieves a list of AVObjects that satisfy this query.
+     * Either options.success or options.error is called when the find
+     * completes.
+     *
+     * @see AV.Query#find
+     * @param {Object} options A Backbone-style options object.
+     * @return {AV.Promise} A promise that is resolved with the results when
+     * the query completes.
+     */
+    find: function(options) {
+      var self = this;
+
+      var request = this._createRequest();
+
+      return request.then(function(response) {
+        //update sid for next querying.
+        if(response.sid) {
+          self._oldSid = self._sid;
+          self._sid = response.sid;
+        }
+        self._hits = response.hits || 0;
+
+        return _.map(response.results, function(json) {
+          if(json.className) {
+            response.className = json.className;
+          }
+          var obj = self._newObject(response);
+          obj.appURL = json['_app_url'];
+          obj._finishFetch(self._processResult(json), true);
+          return obj;
+        });
+      })._thenRunCallbacks(options);
+    },
+
+    toJSON: function(){
+      var params = AV.SearchQuery.__super__.toJSON.call(this);
+      delete params.where;
+      if(this.className) {
+        params.clazz = this.className;
+      }
+      if(this._sid) {
+        params.sid = this._sid;
+      }
+      if(!this._queryString) {
+        throw 'Please set query string.';
+      } else {
+        params.q = this._queryString;
+      }
+      if(this._highlights) {
+        params.highlights = this._highlights.join(',');
+      }
+      if(this._sortBuilder && params.order) {
+        throw 'sort and order can not be set at same time.';
+      }
+      if(this._sortBuilder) {
+        params.sort = this._sortBuilder.build();
+      }
+
+      return params;
+    }
+  });
+})(this);
 
 /*global FB: false , console: false*/
 (function(root) {
